@@ -80,8 +80,13 @@ export default function App() {
     spinTimer.current = setTimeout(() => setSpinFast(false), 1400)
   }, [])
 
-  const t  = THEMES[theme] || THEMES.motorola
-  const tA = adaptTheme(t, isDark)
+  const t   = THEMES[theme] || THEMES.motorola
+  const tA  = adaptTheme(t, isDark)
+  // ui1: the interactive/text accent — for Look, yellow is reserved for SVG gear
+  // visuals only; red is used for all text, borders, and interactive states.
+  const ui1 = tA.uiAccent || tA.a1
+  // tUI: tA with a1 replaced by ui1, used by all non-SVG components
+  const tUI = { ...tA, a1: ui1 }
   const { ratio, rollout, gearInches } = compute(cog, chainring, wheelSel, customCirc)
 
   const handleAdd = () => {
@@ -144,7 +149,7 @@ export default function App() {
               value={chainring}
               onChange={v => { setChainring(v); triggerSpin() }}
               label="Ring Teeth"
-              accentColor={tA.a1}
+              accentColor={ui1}
               min={22}
               max={62}
             />
@@ -156,7 +161,7 @@ export default function App() {
             customCirc={customCirc}
             setCustomCirc={setCustomCirc}
             rollout={rollout}
-            accent1={tA.a1}
+            accent1={ui1}
           />
 
           <div style={{ height: 14 }} />
@@ -165,7 +170,7 @@ export default function App() {
             label={label}
             setLabel={setLabel}
             onAdd={handleAdd}
-            tA={tA}
+            tA={tUI}
             disabled={addDisabled}
           />
         </div>
@@ -176,7 +181,7 @@ export default function App() {
             entries={entries}
             onDelete={handleDelete}
             onClearAll={handleClearAll}
-            tA={tA}
+            tA={tUI}
           />
         </div>
       </div>

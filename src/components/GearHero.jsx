@@ -84,14 +84,15 @@ export default function GearHero({ cog, chainring, tA, spinFast }) {
       viewBox={`0 0 ${W} ${H}`}
       style={{ width: '100%', display: 'block', overflow: 'visible' }}
     >
-      {/* Chain — behind the gears */}
+      {/* Chain — round dots evoke rollers; outer-tangent path wraps both gears */}
       <path
         d={chainPath}
         fill="none"
         stroke="var(--text-dim)"
-        strokeWidth="1.5"
-        strokeDasharray="4 4"
-        opacity="0.45"
+        strokeWidth="2.5"
+        strokeDasharray="2 6"
+        strokeLinecap="round"
+        opacity="0.55"
       />
 
       {/* Cog */}

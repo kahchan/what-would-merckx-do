@@ -6,7 +6,9 @@ export const WHEEL = {
 
 export const THEMES = {
   motorola: { a1: '#B81830', a2: '#003DA5', a3: '#FFFFFF', label: 'Motorola' },
-  look:     { a1: '#F0C000', a2: '#111111', a3: '#B81830', label: 'Look' },
+  // Look: yellow is visual-only (gear SVG strokes). uiAccent (red) is used for
+  // all text, borders, interactive states — yellow on cream is illegible.
+  look:     { a1: '#F0C000', a2: '#003DA5', a3: '#B81830', uiAccent: '#B81830', label: 'Look' },
   '7eleven':{ a1: '#B81830', a2: '#005C34', a3: '#FFFFFF', label: '7-Eleven' },
   molteni:  { a1: '#E85D04', a2: '#00356B', a3: '#F5DEB3', label: 'Molteni' },
 }
@@ -63,5 +65,7 @@ export function adaptTheme(t, isDark) {
     if (isDark  && luma < 35)  return '#D0D0D0'
     return hex
   }
-  return { ...t, a1: adapt(t.a1), a2: adapt(t.a2), a3: adapt(t.a3) }
+  const adapted = { ...t, a1: adapt(t.a1), a2: adapt(t.a2), a3: adapt(t.a3) }
+  if (t.uiAccent) adapted.uiAccent = adapt(t.uiAccent)
+  return adapted
 }
