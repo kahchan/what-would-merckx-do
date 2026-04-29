@@ -26,6 +26,15 @@ const LIGHT_VARS = {
   '--text-dim': '#6e6560',
 }
 
+// Molteni light: wheat background uses the theme's own a3 colour as the page bg
+const MOLTENI_LIGHT_VARS = {
+  '--bg':       '#F5DEB3',
+  '--bg2':      '#EDD49A',
+  '--border':   '#D4B87A',
+  '--text':     '#1a1614',
+  '--text-dim': '#7a5c38',
+}
+
 const FONT_VARS = {
   '--font-display': "'DM Serif Display', serif",
   '--font-ui':      "'Space Grotesk', sans-serif",
@@ -108,10 +117,11 @@ export default function App() {
 
   const addDisabled = !cog || !chainring || parseInt(cog) < 1 || parseInt(chainring) < 1
 
-  const cssVars = {
-    ...(isDark ? DARK_VARS : LIGHT_VARS),
-    ...FONT_VARS,
-  }
+  const bgVars = isDark ? DARK_VARS
+    : theme === 'molteni' ? MOLTENI_LIGHT_VARS
+    : LIGHT_VARS
+
+  const cssVars = { ...bgVars, ...FONT_VARS }
 
   return (
     <div className="wwmd" style={cssVars}>
@@ -125,7 +135,7 @@ export default function App() {
       <div className="wwmd-grid">
         {/* ── Left panel ── */}
         <div className="wwmd-left" style={{ padding: '18px 20px 28px' }}>
-          <div className="wwmd-section-label">Drivetrain</div>
+          <div className="wwmd-section-label">{chainring}×{cog}</div>
 
           <GearHero
             cog={cog}
@@ -134,8 +144,8 @@ export default function App() {
             spinFast={spinFast}
           />
 
-          {/* Input row */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 14, marginTop: 8 }}>
+          {/* Input row — 16px top breathing room (doubled from suggestion) */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 14, marginTop: 16 }}>
             <NumericInput
               value={cog}
               onChange={v => { setCog(v); triggerSpin() }}

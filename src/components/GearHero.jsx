@@ -105,19 +105,6 @@ export default function GearHero({ cog, chainring, tA, spinFast }) {
         <GearSVG cx={RING_X} cy={RING_Y} r={ringR} color={tA.a1} holes strokeWidth={4.5} holeCount={5} />
       </g>
 
-      {/* Labels */}
-      <text
-        x={COG_X} y={COG_Y + cogR + 17}
-        textAnchor="middle"
-        fill="var(--text-dim)"
-        style={{ font: '9px/1 var(--font-mono)', letterSpacing: '0.14em' }}
-      >COG</text>
-      <text
-        x={RING_X} y={RING_Y + ringR + 17}
-        textAnchor="middle"
-        fill="var(--text-dim)"
-        style={{ font: '9px/1 var(--font-mono)', letterSpacing: '0.14em' }}
-      >CHAINRING</text>
     </svg>
   )
 }
