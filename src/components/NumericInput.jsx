@@ -1,9 +1,11 @@
 import { useState, useEffect, useRef } from 'react'
 
 export default function NumericInput({ value, onChange, label, accentColor, min = 1, max = 99 }) {
-  const [draft, setDraft] = useState(String(value))
-  const [flash, setFlash] = useState(false)
-  const ref = useRef()
+  const [draft, setDraft]     = useState(String(value))
+  const [flash, setFlash]     = useState(false)
+  const [dragging, setDragging] = useState(false)
+  const ref     = useRef()
+  const dragRef = useRef(null)
 
   useEffect(() => { setDraft(String(value)) }, [value])
 
@@ -38,6 +40,32 @@ export default function NumericInput({ value, onChange, label, accentColor, min 
     if (e.key === 'Enter') ref.current?.blur()
   }
 
+  const handleMouseDown = (e) => {
+    if (e.button !== 0) return
+    e.preventDefault()
+    ref.current?.blur()
+    setDragging(true)
+    dragRef.current = { startY: e.clientY, startValue: parseInt(String(value)) || min }
+
+    const onMove = (me) => {
+      const delta = Math.round((dragRef.current.startY - me.clientY) / 3)
+      const v = Math.max(min, Math.min(max, dragRef.current.startValue + delta))
+      onChange(v)
+      setDraft(String(v))
+    }
+
+    const onUp = () => {
+      dragRef.current = null
+      setDragging(false)
+      document.removeEventListener('mousemove', onMove)
+      document.removeEventListener('mouseup', onUp)
+      doFlash()
+    }
+
+    document.addEventListener('mousemove', onMove)
+    document.addEventListener('mouseup', onUp)
+  }
+
   return (
     <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 5 }}>
       <input
@@ -46,10 +74,16 @@ export default function NumericInput({ value, onChange, label, accentColor, min 
         inputMode="numeric"
         value={draft}
         onChange={e => setDraft(e.target.value)}
-        onBlur={e => commit(e.target.value)}
+        onBlur={e => { if (!dragRef.current) commit(e.target.value) }}
         onKeyDown={handleKeyDown}
+        onMouseDown={handleMouseDown}
         className={`wwmd-num-field${flash ? ' flashing' : ''}`}
-        style={{ border: `1.5px solid ${accentColor}`, color: accentColor }}
+        style={{
+          border: `1.5px solid ${accentColor}`,
+          color: accentColor,
+          cursor: dragging ? 'ns-resize' : 'ns-resize',
+          userSelect: dragging ? 'none' : undefined,
+        }}
       />
       <span style={{
         fontFamily: 'var(--font-mono)',

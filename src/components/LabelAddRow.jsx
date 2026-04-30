@@ -1,14 +1,47 @@
+import { useState } from 'react'
 import { contrastColor } from '../calculations.js'
 
+const PLACEHOLDERS = [
+  'Race day',
+  'Training ride',
+  'Hill climb',
+  'Sprint finish',
+  'Sunday spin',
+  'Criterium',
+  'Time trial',
+  'The Cannibal',
+  'Café ride',
+  'Breakaway',
+  'Chain gang',
+  'Paris–Roubaix',
+  'Morning commute',
+  'Attack!',
+  'The Merckx',
+  'Fixed commute',
+]
+
 export default function LabelAddRow({ label, setLabel, onAdd, tA, disabled }) {
+  const [phIdx, setPhIdx] = useState(0)
+
+  const handleAdd = () => {
+    if (disabled) return
+    onAdd()
+    setPhIdx(i => {
+      let next
+      do { next = Math.floor(Math.random() * PLACEHOLDERS.length) }
+      while (next === i)
+      return next
+    })
+  }
+
   return (
     <div style={{ display: 'flex', gap: 8 }}>
       <input
         type="text"
         value={label}
         onChange={e => setLabel(e.target.value)}
-        onKeyDown={e => e.key === 'Enter' && !disabled && onAdd()}
-        placeholder="Race day"
+        onKeyDown={e => e.key === 'Enter' && !disabled && handleAdd()}
+        placeholder={PLACEHOLDERS[phIdx]}
         maxLength={28}
         style={{
           flex: 1,
@@ -24,7 +57,7 @@ export default function LabelAddRow({ label, setLabel, onAdd, tA, disabled }) {
       />
       <button
         className="wwmd-add-btn"
-        onClick={onAdd}
+        onClick={handleAdd}
         disabled={disabled}
         style={{
           background: tA.a1,

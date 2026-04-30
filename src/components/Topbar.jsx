@@ -9,11 +9,11 @@ export default function Topbar({ theme, onThemeChange, isDark, onDarkToggle }) {
       alignItems: 'center',
       padding: '0 20px',
       height: 61,
-      borderBottom: '1px solid var(--border)',
       position: 'sticky',
       top: 0,
       zIndex: 10,
       background: 'var(--bg)',
+      transition: 'background 0.6s',
     }}>
       <span style={{
         fontFamily: "'DM Serif Display', serif",
@@ -24,7 +24,8 @@ export default function Topbar({ theme, onThemeChange, isDark, onDarkToggle }) {
         lineHeight: 1,
         userSelect: 'none',
       }}>
-        what would merckx do?
+        <span className="wwmd-wordmark-full">What would Merckx do?</span>
+        <span className="wwmd-wordmark-short">wwmd?</span>
       </span>
       <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
         <ThemeSelector current={theme} onChange={onThemeChange} />

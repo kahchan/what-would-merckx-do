@@ -69,7 +69,7 @@ export default function App() {
   const [label,       setLabel]       = useState('')
   const [entries,     setEntries]     = useState([])
   const [spinFast,    setSpinFast]    = useState(false)
-  const [rpm,         setRpm]         = useState(null)  // null = not set
+  const [rpm,         setRpm]         = useState(90)
 
   const spinTimer = useRef(null)
 
@@ -97,8 +97,9 @@ export default function App() {
   // ui1: the interactive/text accent — for Look, yellow is reserved for SVG gear
   // visuals only; red is used for all text, borders, and interactive states.
   const ui1 = tA.uiAccent || tA.a1
-  // tUI: tA with a1 replaced by ui1, used by all non-SVG components
-  const tUI = { ...tA, a1: ui1 }
+  // tUI: tA with a1 replaced by ui1, used by all non-SVG components.
+  // barColor preserves the visual a1 (e.g. Look yellow) for rollout bars.
+  const tUI = { ...tA, a1: ui1, barColor: tA.a1 }
   const { ratio, rollout, gearInches } = compute(cog, chainring, wheelSel, customCirc)
   const speed = calcSpeed(rollout, rpm)
 
@@ -139,67 +140,75 @@ export default function App() {
       <div className="wwmd-grid">
         {/* ── Left panel ── */}
         <div className="wwmd-left" style={{ padding: '18px 20px 28px' }}>
-          <div className="wwmd-section-label">{chainring}×{cog}</div>
+          <div className="wwmd-section-label" style={{ flexShrink: 0 }}>{chainring}×{cog}</div>
 
-          <GearHero
-            cog={cog}
-            chainring={chainring}
-            tA={tA}
-            spinFast={spinFast}
-          />
-
-          {/* Input row — 16px top breathing room (doubled from suggestion) */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 14, marginTop: 16 }}>
-            <NumericInput
-              value={cog}
-              onChange={v => { setCog(v); triggerSpin() }}
-              label="Cog Teeth"
-              accentColor={tA.a2}
-              min={8}
-              max={55}
-            />
-            <RatioBadge ratio={ratio} color={tA.a3} />
-            <NumericInput
-              value={chainring}
-              onChange={v => { setChainring(v); triggerSpin() }}
-              label="Ring Teeth"
-              accentColor={ui1}
-              min={22}
-              max={62}
+          {/* Hero grows to fill available height — controls below stay fixed */}
+          <div style={{ flex: 1, minHeight: 0, minWidth: 0 }}>
+            <GearHero
+              cog={cog}
+              chainring={chainring}
+              tA={tA}
+              spinFast={spinFast}
+              rpm={rpm}
             />
           </div>
 
-          <WheelRow
-            wheelSel={wheelSel}
-            setWheelSel={w => { setWheelSel(w); triggerSpin() }}
-            customCirc={customCirc}
-            setCustomCirc={setCustomCirc}
-            rollout={rollout}
-            accent1={ui1}
-          />
+          {/* Controls — never grow or shrink */}
+          <div style={{ flexShrink: 0 }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 14, marginTop: 14 }}>
+              <NumericInput
+                value={cog}
+                onChange={v => { setCog(v); triggerSpin() }}
+                label="Cog Teeth"
+                accentColor={tA.a2}
+                min={8}
+                max={55}
+              />
+              <RatioBadge ratio={ratio} color={tA.a3} />
+              <NumericInput
+                value={chainring}
+                onChange={v => { setChainring(v); triggerSpin() }}
+                label="Ring Teeth"
+                accentColor={ui1}
+                min={22}
+                max={62}
+              />
+            </div>
 
-          <div style={{ height: 10 }} />
+            <div style={{ borderTop: '1px solid var(--border)', marginBottom: 14 }} />
 
-          <CadenceRow
-            rpm={rpm}
-            onRpmChange={setRpm}
-            speed={speed}
-            accent1={ui1}
-          />
+            <WheelRow
+              wheelSel={wheelSel}
+              setWheelSel={w => { setWheelSel(w); triggerSpin() }}
+              customCirc={customCirc}
+              setCustomCirc={setCustomCirc}
+              rollout={rollout}
+              accent1={ui1}
+            />
 
-          <div style={{ height: 10 }} />
+            <div style={{ height: 8 }} />
 
-          <LabelAddRow
-            label={label}
-            setLabel={setLabel}
-            onAdd={handleAdd}
-            tA={tUI}
-            disabled={addDisabled}
-          />
+            <CadenceRow
+              rpm={rpm}
+              onRpmChange={setRpm}
+              speed={speed}
+              accent1={ui1}
+            />
+
+            <div style={{ height: 10 }} />
+
+            <LabelAddRow
+              label={label}
+              setLabel={setLabel}
+              onAdd={handleAdd}
+              tA={tUI}
+              disabled={addDisabled}
+            />
+          </div>
         </div>
 
         {/* ── Right panel ── */}
-        <div className="wwmd-right" style={{ padding: '18px 20px 28px' }}>
+        <div className="wwmd-right" style={{ padding: '18px 20px 28px', '--panel-border': tA.a1 }}>
           <ComparisonSection
             entries={entries}
             onDelete={handleDelete}

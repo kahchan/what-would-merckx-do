@@ -62,7 +62,7 @@ export default function ComparisonEntry({ entry, maxRollout, onDelete, tA }) {
         </span>
       </div>
 
-      <RolloutBar value={entry.rollout} max={maxRollout} color={tA.a1} />
+      <RolloutBar value={entry.rollout} max={maxRollout} color={tA.barColor ?? tA.a1} />
     </div>
   )
 }

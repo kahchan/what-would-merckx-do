@@ -1,8 +1,12 @@
 import { useState, useRef } from 'react'
 
+// Mirrors the WheelRow layout: controls on the left, output right-aligned to
+// match the rollout column so rollout and speed read as a vertical pair.
 export default function CadenceRow({ rpm, onRpmChange, speed, accent1 }) {
-  const [draft, setDraft] = useState(rpm === null ? '' : String(rpm))
-  const ref = useRef()
+  const [draft, setDraft]       = useState(rpm === null ? '' : String(rpm))
+  const [dragging, setDragging] = useState(false)
+  const ref     = useRef()
+  const dragRef = useRef(null)
 
   const commit = (raw) => {
     const n = parseInt(raw)
@@ -23,49 +27,81 @@ export default function CadenceRow({ rpm, onRpmChange, speed, accent1 }) {
     if (e.key === 'Enter')     { ref.current?.blur() }
   }
 
+  const handleMouseDown = (e) => {
+    if (e.button !== 0) return
+    e.preventDefault()
+    ref.current?.blur()
+    setDragging(true)
+    const startRpm = parseInt(draft) || 90
+    dragRef.current = { startY: e.clientY, startValue: startRpm }
+
+    const onMove = (me) => {
+      const delta = Math.round((dragRef.current.startY - me.clientY) / 2)
+      const v = Math.max(1, Math.min(220, dragRef.current.startValue + delta))
+      setDraft(String(v))
+      onRpmChange(v)
+    }
+
+    const onUp = () => {
+      dragRef.current = null
+      setDragging(false)
+      document.removeEventListener('mousemove', onMove)
+      document.removeEventListener('mouseup', onUp)
+    }
+
+    document.addEventListener('mousemove', onMove)
+    document.addEventListener('mouseup', onUp)
+  }
+
   return (
-    <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-      <span style={{
-        fontFamily: 'var(--font-mono)', fontSize: 9, letterSpacing: '0.12em',
-        color: 'var(--text-dim)', flexShrink: 0, textTransform: 'uppercase',
-      }}>RPM</span>
+    <div style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
+      {/* left side: rpm control — fills same space as wheel buttons */}
+      <div style={{ flex: 1, display: 'flex', alignItems: 'center', gap: 7 }}>
+        <span style={{
+          fontFamily: 'var(--font-mono)', fontSize: 9, letterSpacing: '0.14em',
+          color: 'var(--text-dim)', textTransform: 'uppercase', flexShrink: 0,
+        }}>@</span>
+        <input
+          ref={ref}
+          type="text"
+          inputMode="numeric"
+          value={draft}
+          placeholder="90"
+          onChange={e => setDraft(e.target.value)}
+          onBlur={e => { if (!dragRef.current) commit(e.target.value) }}
+          onKeyDown={handleKeyDown}
+          onMouseDown={handleMouseDown}
+          style={{
+            width: 52,
+            background: 'var(--bg2)',
+            border: '1.5px solid var(--border)',
+            color: 'var(--text)',
+            fontFamily: 'var(--font-mono)',
+            fontSize: 13,
+            fontWeight: 700,
+            padding: '5px 6px',
+            borderRadius: 3,
+            textAlign: 'center',
+            cursor: 'ns-resize',
+            userSelect: dragging ? 'none' : undefined,
+          }}
+        />
+        <span style={{
+          fontFamily: 'var(--font-mono)', fontSize: 9, letterSpacing: '0.10em',
+          color: 'var(--text-dim)',
+        }}>rpm</span>
+      </div>
 
-      <input
-        ref={ref}
-        type="text"
-        inputMode="numeric"
-        value={draft}
-        placeholder="90"
-        onChange={e => setDraft(e.target.value)}
-        onBlur={e => commit(e.target.value)}
-        onKeyDown={handleKeyDown}
-        style={{
-          width: 64,
-          background: 'var(--bg2)',
-          border: '1.5px solid var(--border)',
-          color: 'var(--text)',
-          fontFamily: 'var(--font-mono)',
-          fontSize: 13,
-          fontWeight: 700,
-          padding: '6px 8px',
-          borderRadius: 3,
-          textAlign: 'center',
-          cursor: 'ns-resize',
-        }}
-      />
-
-      <span style={{
-        fontFamily: 'var(--font-mono)', fontSize: 9, letterSpacing: '0.08em',
-        color: 'var(--text-dim)',
-      }}>→</span>
-
+      {/* right side: speed — aligns with rollout column */}
       <div style={{
         fontFamily: 'var(--font-mono)',
         fontSize: 16,
         fontWeight: 700,
         color: speed !== null ? accent1 : 'var(--text-dim)',
         letterSpacing: '-0.02em',
-        minWidth: 80,
+        minWidth: 58,
+        textAlign: 'right',
+        whiteSpace: 'nowrap',
       }}>
         {speed !== null ? `${speed.toFixed(1)} km/h` : '—'}
       </div>

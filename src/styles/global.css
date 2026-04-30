@@ -16,6 +16,10 @@ body {
   to { transform: rotate(360deg); }
 }
 
+@keyframes wwmd-chain {
+  to { stroke-dashoffset: -16; }
+}
+
 @keyframes wwmd-flash {
   0%, 100% { opacity: 1; }
   50%       { opacity: 0.15; }
@@ -34,7 +38,15 @@ body {
   color: var(--text);
   min-height: 100vh;
   container-type: inline-size;
-  transition: background 0.25s, color 0.25s;
+  transition: background 0.6s, color 0.6s;
+}
+
+/* Theme colour fade — applied to elements that carry their own bg/border */
+.wwmd-entry,
+.wwmd-num-field,
+.wwmd-left,
+.wwmd-right {
+  transition: background-color 0.6s, border-color 0.6s;
 }
 
 .wwmd input,
@@ -58,18 +70,53 @@ body {
   grid-template-columns: 1fr;
 }
 
+/* Hero SVG: mobile = auto-height (scales with width),
+   desktop = fills flex wrapper (height drives, width follows) */
+.wwmd-hero {
+  width: 100%;
+  height: auto;
+  display: block;
+  overflow: visible;
+  cursor: pointer;
+}
+
+/* Wheel button labels: always show full label unless narrow */
+.wwmd-wheel-short { display: none; }
+
+/* Wordmark: full by default, abbreviated when narrow */
+.wwmd-wordmark-short { display: none; }
+
 @container (min-width: 720px) {
   .wwmd-grid {
     grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
   }
-  .wwmd-right {
-    border-left: 1px solid var(--border);
+  /* Left panel: flex column, hero grows, controls stay put — no scroll */
+  .wwmd-left {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    height: calc(100vh - 61px);
   }
-  .wwmd-left,
+  .wwmd-hero {
+    width: 100%;
+    height: 100%;
+  }
+  /* Right panel: still scrollable for long comparison lists */
   .wwmd-right {
     overflow-y: auto;
     max-height: calc(100vh - 61px);
   }
+}
+
+/* Narrow viewports: abbreviate wheel labels and wordmark */
+@container (max-width: 430px) {
+  .wwmd-wheel-long  { display: none; }
+  .wwmd-wheel-short { display: inline; }
+}
+
+@container (max-width: 500px) {
+  .wwmd-wordmark-full  { display: none; }
+  .wwmd-wordmark-short { display: block; }
 }
 
 /* ── Numeric input ──────────────────────────────────────────── */
@@ -87,6 +134,10 @@ body {
   background: var(--bg2);
 }
 
+.wwmd-num-field:hover:not(:focus) {
+  filter: brightness(1.08);
+}
+
 .wwmd-num-field:focus {
   cursor: text;
   box-shadow: inset 0 0 0 1px currentColor;
@@ -100,18 +151,21 @@ body {
 
 .wwmd-wheel-btn {
   flex: 1;
-  padding: 8px 4px;
+  padding: 7px 3px;
   border-radius: 3px;
   cursor: pointer;
   font-family: var(--font-mono);
-  font-size: 12px;
-  letter-spacing: 0.05em;
-  transition: filter 0.12s;
+  font-size: 10px;
+  letter-spacing: 0.03em;
   background: transparent;
+  border: 1.5px solid transparent;
+  color: var(--text-dim);
+  transition: border-color 0.14s, background 0.14s, color 0.12s;
 }
 
-.wwmd-wheel-btn:hover {
-  filter: brightness(1.18);
+.wwmd-wheel-btn:not(.active):hover {
+  border-color: var(--border);
+  color: var(--text);
 }
 
 /* ── Add button ─────────────────────────────────────────────── */
@@ -126,11 +180,11 @@ body {
   letter-spacing: 0.12em;
   padding: 12px 20px;
   white-space: nowrap;
-  transition: filter 0.12s, transform 0.1s;
+  transition: filter 0.12s, transform 0.12s;
 }
 
-.wwmd-add-btn:hover  { filter: brightness(1.1); }
-.wwmd-add-btn:active { transform: scale(0.96); }
+.wwmd-add-btn:hover  { filter: brightness(1.12); transform: translateY(-1px); }
+.wwmd-add-btn:active { transform: scale(0.96) translateY(0); }
 .wwmd-add-btn:disabled {
   opacity: 0.35;
   cursor: not-allowed;
@@ -144,6 +198,11 @@ body {
   border-radius: 4px;
   padding: 12px 14px;
   position: relative;
+  transition: transform 0.14s;
+}
+
+.wwmd-entry:hover {
+  transform: translateY(-1px);
 }
 
 .wwmd-del {
@@ -167,6 +226,16 @@ body {
 
 .wwmd-del:hover {
   color: #e8001d !important;
+}
+
+/* ── Clear all button ───────────────────────────────────────── */
+
+.wwmd-clear-btn {
+  transition: color 0.14s;
+}
+
+.wwmd-clear-btn:hover {
+  color: var(--text) !important;
 }
 
 /* ── Theme dots ─────────────────────────────────────────────── */

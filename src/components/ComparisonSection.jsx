@@ -23,6 +23,7 @@ export default function ComparisonSection({ entries, onDelete, onClearAll, tA })
         </span>
         {entries.length > 0 && (
           <button
+            className="wwmd-clear-btn"
             onClick={onClearAll}
             style={{
               background: 'none',
@@ -53,8 +54,8 @@ export default function ComparisonSection({ entries, onDelete, onClearAll, tA })
             borderTop: '1px solid var(--border)',
             marginTop: 4,
           }}>
-            No setups saved yet.<br />
-            <span style={{ opacity: 0.5, fontSize: 10 }}>Label a gear and hit + ADD.</span>
+            Compare gear setups side by side.<br />
+            <span style={{ opacity: 0.5, fontSize: 10 }}>Rollout and gear inches, ranked by reach.</span>
           </div>
         ) : (
           entries.map(e => (

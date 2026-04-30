@@ -1,28 +1,33 @@
 const OPTS = [
-  { key: '700c',   label: '700c' },
-  { key: '650b',   label: '650b' },
-  { key: '26',     label: '26"'  },
-  { key: 'custom', label: '···'  },
+  { key: '32',     long: '32"',           short: '32"'    },
+  { key: '700c',   long: '700c / 29"',    short: '29"'    },
+  { key: '650b',   long: '650b / 27.5"',  short: '27.5"'  },
+  { key: '26',     long: '26"',           short: '26"'    },
+  { key: 'custom', long: '···',           short: '···'    },
 ]
 
 export default function WheelRow({ wheelSel, setWheelSel, customCirc, setCustomCirc, rollout, accent1 }) {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
       <div style={{ display: 'flex', gap: 5, alignItems: 'center' }}>
-        {OPTS.map(({ key, label }) => {
+        {OPTS.map(({ key, long, short }) => {
           const active = wheelSel === key
           return (
             <button
               key={key}
-              className="wwmd-wheel-btn"
+              className={`wwmd-wheel-btn${active ? ' active' : ''}`}
               onClick={() => setWheelSel(key)}
-              style={{
+              style={active ? {
+                border: `1.5px solid ${accent1}`,
+                background: accent1 + '1a',
+                color: accent1,
+              } : {
                 flex: key === 'custom' ? 0.65 : 1,
-                border: `1.5px solid ${active ? accent1 : 'var(--border)'}`,
-                background: active ? accent1 + '1a' : 'transparent',
-                color: active ? accent1 : 'var(--text-dim)',
               }}
-            >{label}</button>
+            >
+              <span className="wwmd-wheel-long">{long}</span>
+              <span className="wwmd-wheel-short">{short}</span>
+            </button>
           )
         })}
         <div style={{

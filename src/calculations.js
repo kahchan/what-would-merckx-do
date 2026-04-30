@@ -1,6 +1,7 @@
 export const WHEEL = {
-  '700c': { circ: 2105, diam: 700 },
-  '650b': { circ: 1953, diam: 650 },
+  '700c': { circ: 2105, diam: 700   },
+  '650b': { circ: 1953, diam: 650   },
+  '32':   { circ: 2553, diam: 813   },
   '26':   { circ: 1995, diam: 660.4 },
 }
 
