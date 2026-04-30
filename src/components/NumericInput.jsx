@@ -41,7 +41,7 @@ export default function NumericInput({ value, onChange, label, accentColor, min 
   }
 
   const handleMouseDown = (e) => {
-    if (e.pointerType === 'touch') return  // let mobile tap focus + keyboard work normally
+    if (e.pointerType !== 'mouse') return  // touch/pen: let browser handle focus + keyboard
     if (e.button !== 0) return
     e.preventDefault()
     ref.current?.blur()
@@ -78,7 +78,7 @@ export default function NumericInput({ value, onChange, label, accentColor, min 
         onChange={e => setDraft(e.target.value)}
         onBlur={e => { if (!dragRef.current) commit(e.target.value) }}
         onKeyDown={handleKeyDown}
-        onMouseDown={handleMouseDown}
+        onPointerDown={handleMouseDown}
         className={`wwmd-num-field${flash ? ' flashing' : ''}`}
         style={{
           border: `1.5px solid ${accentColor}`,

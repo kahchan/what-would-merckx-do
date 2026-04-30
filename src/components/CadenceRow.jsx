@@ -28,7 +28,7 @@ export default function CadenceRow({ rpm, onRpmChange, speed, accent1 }) {
   }
 
   const handleMouseDown = (e) => {
-    if (e.pointerType === 'touch') return  // let mobile tap focus + keyboard work normally
+    if (e.pointerType !== 'mouse') return  // touch/pen: let browser handle focus + keyboard
     if (e.button !== 0) return
     e.preventDefault()
     ref.current?.blur()
@@ -72,7 +72,7 @@ export default function CadenceRow({ rpm, onRpmChange, speed, accent1 }) {
           onChange={e => setDraft(e.target.value)}
           onBlur={e => { if (!dragRef.current) commit(e.target.value) }}
           onKeyDown={handleKeyDown}
-          onMouseDown={handleMouseDown}
+          onPointerDown={handleMouseDown}
           style={{
             width: 52,
             background: 'var(--bg2)',

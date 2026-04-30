@@ -1,4 +1,5 @@
 import { useState, useRef, useCallback } from 'react'
+import { version } from '../package.json'
 import { THEMES, THEME_KEYS, compute, adaptTheme, calcSpeed } from './calculations.js'
 import Topbar from './components/Topbar.jsx'
 import GearHero from './components/GearHero.jsx'
@@ -136,6 +137,12 @@ export default function App() {
         isDark={isDark}
         onDarkToggle={toggleDark}
       />
+
+      <div style={{
+        position: 'fixed', bottom: 10, right: 12, zIndex: 99,
+        fontFamily: 'var(--font-mono)', fontSize: 9, letterSpacing: '0.08em',
+        color: 'var(--text-dim)', opacity: 0.45, pointerEvents: 'none',
+      }}>v{version}</div>
 
       <div className="wwmd-grid">
         {/* ── Left panel ── */}
