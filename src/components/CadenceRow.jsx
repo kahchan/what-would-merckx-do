@@ -66,6 +66,7 @@ export default function CadenceRow({ rpm, onRpmChange, speed, accent1 }) {
           ref={ref}
           type="text"
           inputMode="numeric"
+          pattern="[0-9]*"
           value={draft}
           placeholder="90"
           onChange={e => setDraft(e.target.value)}

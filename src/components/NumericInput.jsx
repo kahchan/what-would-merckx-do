@@ -73,6 +73,7 @@ export default function NumericInput({ value, onChange, label, accentColor, min 
         ref={ref}
         type="text"
         inputMode="numeric"
+        pattern="[0-9]*"
         value={draft}
         onChange={e => setDraft(e.target.value)}
         onBlur={e => { if (!dragRef.current) commit(e.target.value) }}
