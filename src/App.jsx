@@ -1,10 +1,11 @@
 import { useState, useRef, useCallback } from 'react'
-import { THEMES, THEME_KEYS, compute, adaptTheme } from './calculations.js'
+import { THEMES, THEME_KEYS, compute, adaptTheme, calcSpeed } from './calculations.js'
 import Topbar from './components/Topbar.jsx'
 import GearHero from './components/GearHero.jsx'
 import NumericInput from './components/NumericInput.jsx'
 import RatioBadge from './components/RatioBadge.jsx'
 import WheelRow from './components/WheelRow.jsx'
+import CadenceRow from './components/CadenceRow.jsx'
 import LabelAddRow from './components/LabelAddRow.jsx'
 import ComparisonSection from './components/ComparisonSection.jsx'
 
@@ -26,11 +27,12 @@ const LIGHT_VARS = {
   '--text-dim': '#6e6560',
 }
 
-// Molteni light: wheat background uses the theme's own a3 colour as the page bg
+// Molteni light: very pale wheat bg — full wheat (#F5DEB3) is too heavy as a
+// page background; reserved for cards (--bg2) and foreground accents in dark mode
 const MOLTENI_LIGHT_VARS = {
-  '--bg':       '#F5DEB3',
-  '--bg2':      '#EDD49A',
-  '--border':   '#D4B87A',
+  '--bg':       '#faf4e6',
+  '--bg2':      '#f0e4c0',
+  '--border':   '#d8c48a',
   '--text':     '#1a1614',
   '--text-dim': '#7a5c38',
 }
@@ -67,6 +69,7 @@ export default function App() {
   const [label,       setLabel]       = useState('')
   const [entries,     setEntries]     = useState([])
   const [spinFast,    setSpinFast]    = useState(false)
+  const [rpm,         setRpm]         = useState(null)  // null = not set
 
   const spinTimer = useRef(null)
 
@@ -97,6 +100,7 @@ export default function App() {
   // tUI: tA with a1 replaced by ui1, used by all non-SVG components
   const tUI = { ...tA, a1: ui1 }
   const { ratio, rollout, gearInches } = compute(cog, chainring, wheelSel, customCirc)
+  const speed = calcSpeed(rollout, rpm)
 
   const handleAdd = () => {
     const entry = {
@@ -174,7 +178,16 @@ export default function App() {
             accent1={ui1}
           />
 
-          <div style={{ height: 14 }} />
+          <div style={{ height: 10 }} />
+
+          <CadenceRow
+            rpm={rpm}
+            onRpmChange={setRpm}
+            speed={speed}
+            accent1={ui1}
+          />
+
+          <div style={{ height: 10 }} />
 
           <LabelAddRow
             label={label}

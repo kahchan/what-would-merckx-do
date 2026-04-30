@@ -44,6 +44,12 @@ export function compute(cog, chainring, wheelSel, customCirc) {
   }
 }
 
+// speed in km/h from rollout (metres) and cadence (RPM)
+export function calcSpeed(rollout, rpm) {
+  if (!rpm || rpm <= 0) return null
+  return rollout * rpm * 60 / 1000
+}
+
 // luma-based contrast: returns readable foreground colour for a given hex bg
 export function contrastColor(hex) {
   if (!hex || hex[0] !== '#') return '#111'
