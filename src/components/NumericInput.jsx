@@ -41,6 +41,7 @@ export default function NumericInput({ value, onChange, label, accentColor, min 
   }
 
   const handleMouseDown = (e) => {
+    if (e.pointerType === 'touch') return  // let mobile tap focus + keyboard work normally
     if (e.button !== 0) return
     e.preventDefault()
     ref.current?.blur()
