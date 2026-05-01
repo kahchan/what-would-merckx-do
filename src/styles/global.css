@@ -30,6 +30,15 @@ body {
   60%       { opacity: 0.45; }
 }
 
+@keyframes wwmd-modal-in {
+  from { opacity: 0; transform: scale(0.96); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+.wwmd-modal {
+  animation: wwmd-modal-in 200ms ease-out;
+}
+
 /* ── App shell ──────────────────────────────────────────────── */
 
 .wwmd {

@@ -9,6 +9,7 @@ import WheelRow from './components/WheelRow.jsx'
 import CadenceRow from './components/CadenceRow.jsx'
 import LabelAddRow from './components/LabelAddRow.jsx'
 import ComparisonSection from './components/ComparisonSection.jsx'
+import IntroModal from './components/IntroModal.jsx'
 
 // ── CSS variable maps ──────────────────────────────────────────────────────────
 
@@ -52,6 +53,10 @@ function pickInitialTheme() {
   return THEME_KEYS[Math.floor(Math.random() * THEME_KEYS.length)]
 }
 
+function pickShowIntro() {
+  return localStorage.getItem('wwmd-intro-seen') !== '1'
+}
+
 function pickInitialDark() {
   const stored = localStorage.getItem('wwmd-dark')
   if (stored !== null) return stored === 'true'
@@ -71,8 +76,14 @@ export default function App() {
   const [entries,     setEntries]     = useState([])
   const [spinFast,    setSpinFast]    = useState(false)
   const [rpm,         setRpm]         = useState(90)
+  const [showIntro,   setShowIntro]   = useState(pickShowIntro)
 
   const spinTimer = useRef(null)
+
+  const closeIntro = () => {
+    localStorage.setItem('wwmd-intro-seen', '1')
+    setShowIntro(false)
+  }
 
   const setTheme = (v) => {
     setThemeRaw(v)
@@ -131,6 +142,8 @@ export default function App() {
 
   return (
     <div className="wwmd" style={cssVars}>
+      {showIntro && <IntroModal ui1={ui1} onClose={closeIntro} />}
+
       <Topbar
         theme={theme}
         onThemeChange={setTheme}
