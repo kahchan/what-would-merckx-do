@@ -71,6 +71,25 @@ export default function IntroModal({ ui1, onClose }) {
           and compare setups side by side.
         </p>
 
+        {/* Byline */}
+        <p style={{
+          fontFamily: 'var(--font-ui)',
+          fontSize: 'clamp(11px, 1vw, 13px)',
+          lineHeight: 1.5,
+          color: 'var(--text-dim)',
+          marginBottom: 20,
+        }}>
+          Built by a designer who likes building.{' '}
+          <a
+            href="https://www.linkedin.com/in/kahchan"
+            target="_blank"
+            rel="noreferrer"
+            style={{ color: 'inherit', textUnderlineOffset: 3 }}
+          >
+            Find me on LinkedIn.
+          </a>
+        </p>
+
         {/* Divider */}
         <div style={{ borderTop: '1px solid var(--border)', marginBottom: 20 }} />
 

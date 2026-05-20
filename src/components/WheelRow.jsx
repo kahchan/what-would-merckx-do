@@ -3,6 +3,7 @@ const OPTS = [
   { key: '700c',   long: '700c / 29"',    short: '29"'    },
   { key: '650b',   long: '650b / 27.5"',  short: '27.5"'  },
   { key: '26',     long: '26"',           short: '26"'    },
+  { key: '20',     long: '20"',           short: '20"'    },
   { key: 'custom', long: '···',           short: '···'    },
 ]
 

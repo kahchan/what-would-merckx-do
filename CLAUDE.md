@@ -168,6 +168,30 @@ Entry = {
 - Topbar: `height: 61px; position: sticky; top: 0`
 - Left/right panels: `overflow-y: auto; max-height: calc(100vh - 61px)`
 
+## Architecture Decisions
+
+- **No external state library** — single App component owns all state; overkill for a one-page calculator
+- **On-blur not on-keystroke** — prevents mid-type recalculation jank with numeric inputs
+- **Pure functions in `calculations.js`** — keeps logic testable and decoupled from React
+- **CSS variables for theming** — four palettes swap by changing 3 vars; no JS theme logic at render time
+- **`adaptTheme` luma check** — some palette accent colours are near-white or near-black and become invisible against certain backgrounds; luma-based inversion avoids manual overrides per theme
+- **No dependencies in v1** — keeps bundle tiny and deploy trivial; revisit if comparison features need charting
+
+## Current Focus
+
+_Update this at the start of each session._
+
+- v1 shipped and live
+- Next: data/UX polish (see Extension points table)
+
+## Rules
+
+- Never install a library without proposing it and waiting for approval
+- Show a plan before changing more than 2 files
+- Don't touch `calculations.js` for UI work — keep it pure
+- Theme changes must work across all four palettes; test all before committing
+- Keep GearHero SVG logic in sync with `calculations.js` ratio output
+
 ## Coding Conventions
 
 - No class components

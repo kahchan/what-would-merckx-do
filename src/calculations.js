@@ -3,6 +3,7 @@ export const WHEEL = {
   '650b': { circ: 1953, diam: 650   },
   '32':   { circ: 2553, diam: 813   },
   '26':   { circ: 1995, diam: 660.4 },
+  '20':   { circ: 1559, diam: 496   },
 }
 
 export const THEMES = {
